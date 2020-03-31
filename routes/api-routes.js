@@ -23,7 +23,7 @@ router.get("/api/workout/range", ({ body }, res) => {
             res.status(400).json(err)
         })
 })
-router.post("/api/workout", ({ body }, res) => {
+router.post("/api/workout/range", ({ body }, res) => {
     db.create(body)
         .then(dbWorkout => {
             res.json(dbWorkout)
