@@ -10,14 +10,17 @@ app.use(express.json());
 
 app.use(express.static("public"));
 
+
+// routes
+require("./routes/html-routes")(app);
+app.use(require("./routes/api-routes.js"));
+
+
 mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout", {
     useNewUrlParser: true,
     useFindAndModify: false
 });
 
-// routes
-require("./routes/html-routes")(app);
-app.use(require("./routes/api-routes.js"));
 
 
 app.listen(PORT, () => {

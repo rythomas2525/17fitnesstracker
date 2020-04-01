@@ -1,117 +1,55 @@
 const mongoose = require("mongoose");
-
 const Schema = mongoose.Schema;
-// schema for workouts
-// const workoutSchema = new Schema({
-//     day: { type: Number, required: true },
-//     exercises: [
-//         {
-//             type: {
-//                 type: String,
-//                 required: true
-//             },
-//             name: {
-//                 type: String,
-//                 required: true
-//             },
-
-//             weight: {
-//                 type: Number,
-//                 required: true
-//             },
-//             reps: {
-//                 type: Number,
-//                 required: true
-//             },
-//             sets: {
-//                 type: Number,
-//                 required: true
-//             },
-//             duration: {
-//                 type: Number,
-//                 required: true
-//             }
-//         }
-//     ]
-// });
-
-
-const workoutSchema = new Schema({
-    day: {
-        type: Date,
-        default: Date.now
-    },
-    exercises: [
-        {
-            type: {
-                type: String,
-                required: "resistance"
-            },
-            name: {
-                type: String,
-                trim: true,
-                required: "type of resistance"
-            },
-            duration: {
-                type: Number,
-                trim: true,
-                required: "duration"
-            },
-            weight: {
-                type: Number,
-                trim: true,
-                required: "amount of weight"
-            },
-            reps: {
-                type: Number,
-                trim: true,
-                required: "how many reps?"
-            },
-            sets: {
-                type: Number,
-                trim: true,
-                required: "how many sets?"
+const workoutSchema = new Schema(
+    {
+        day: {
+            type: Date,
+            default: () => new Date()
+        },
+        exercises: [
+            {
+                type: {
+                    type: String,
+                    trim: true,
+                    required: "Enter an exercise type"
+                },
+                name: {
+                    type: String,
+                    trim: true,
+                    required: "Enter an exercise name"
+                },
+                duration: {
+                    type: Number,
+                    required: "Enter an exercise duration in minutes"
+                },
+                weight: {
+                    type: Number
+                },
+                reps: {
+                    type: Number
+                },
+                sets: {
+                    type: Number
+                },
+                distance: {
+                    type: Number
+                }
             }
-        },
-        {
-            type: {
-                type: String,
-                trim: true,
-                required: "cardio"
-            },
-            name: {
-                type: String,
-                trim: true,
-                required: "cardio exercise name"
-            },
-            distance: {
-                type: Number,
-                trim: true,
-                required: "distance"
-            },
-            duration: {
-                type: Number,
-                trim: true,
-                required: "duration"
-            },
-        },
-        {
-            versionKey: false
-        }
-    ]
-},
+        ]
+    },
     {
         toJSON: {
+            // include any virtual properties when data is requested
             virtuals: true
         }
     }
 );
-
+// adds a dynamically-created property to schema
 workoutSchema.virtual("totalDuration").get(function () {
+    // "reduce" array of exercises down to just the sum of their durations
     return this.exercises.reduce((total, exercise) => {
-        return total + exercise.duration
+        return total + exercise.duration;
     }, 0);
 });
 const workout = mongoose.model("workout", workoutSchema);
-
 module.exports = workout;
